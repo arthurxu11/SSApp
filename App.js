@@ -39,27 +39,28 @@ const styles = StyleSheet.create({
 })
 
 function HomeScreen({ navigation }) {
-  fetch("http://0.0.0.0/sus")
-  .then(response => response.json())
-  .then((responseJson) => {
-      if (responseJson['status'] == "Yes") {
-        navigation.navigate('Details')
-      }
+  // All API and server stuff, shouldn't change anything in terms of views
+  // fetch("http://0.0.0.0/sus")
+  // .then(response => response.json())
+  // .then((responseJson) => {
+  //     if (responseJson['status'] == "Yes") {
+  //       navigation.navigate('Details')
+  //     }
 
-  })
-  .catch(error => console.log(error))
+  // })
+  // .catch(error => console.log(error))
 
-  setInterval(function() {
-    fetch("http://0.0.0.0/sus")
-      .then(response => response.json())
-      .then((responseJson) => {
-          if (responseJson['status'] == "Yes") {
-            navigation.navigate('Details')
-          }
+  // setInterval(function() {
+  //   fetch("http://0.0.0.0/sus")
+  //     .then(response => response.json())
+  //     .then((responseJson) => {
+  //         if (responseJson['status'] == "Yes") {
+  //           navigation.navigate('Details')
+  //         }
 
-      })
-      .catch(error => console.log(error))
-  }, 10000);
+  //     })
+  //     .catch(error => console.log(error))
+  // }, 10000);
 
 
   return (
@@ -72,10 +73,11 @@ function HomeScreen({ navigation }) {
 function DetailsScreen({ navigation }) {
   return (
     <View style={styles.danger}>
-      <Image
+      {/* Can't load an image from the server. If you want to layout a photo, uncomment the block and add an image URI*/}
+      {/* <Image
         source={{ uri: "http://0.0.0.0/image" }}
         style={{ width: 200, height: 200 }}
-      />
+      /> */}
 
       <Text style={styles.instructions} >
         Hard Hat not detected
@@ -84,10 +86,14 @@ function DetailsScreen({ navigation }) {
       <Button
           title="Acknowledge"
           onPress={
-            () => fetch("http://0.0.0.0/clear").then(response => response.json()).then((responseJson) => {
-                navigation.goBack()
-            }).catch(error => console.log(error))
-        }
+            navigation.goBack()
+          }
+        // Removed the server part of the button and just made the button go from click -> home
+        //   onPress={
+        //     () => fetch("http://0.0.0.0/clear").then(response => response.json()).then((responseJson) => {
+        //         navigation.goBack()
+        //     }).catch(error => console.log(error))
+        // }
         />
     </View>
   );
