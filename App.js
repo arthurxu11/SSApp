@@ -1,21 +1,110 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { View, Text, StyleSheet, Alert } from 'react-native';
+import { Button, Image } from 'react-native-elements';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function App() {
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    backgroundColor: '#24D31B',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  danger: {
+    flex: 1,
+    backgroundColor: '#fc0303',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+    logo: {
+    width: 305,
+    height: 159,
+    marginBottom: 10,
+  },
+  instructions: {
+    color: '#888',
+    fontSize: 18,
+    marginHorizontal: 15,
+  },
+  button: {
+    backgroundColor: "blue",
+    padding: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#fff',
+  }, 
+})
+
+function HomeScreen({ navigation }) {
+  fetch("http://0.0.0.0/sus")
+  .then(response => response.json())
+  .then((responseJson) => {
+      if (responseJson['status'] == "Yes") {
+        navigation.navigate('Details')
+      }
+
+  })
+  .catch(error => console.log(error))
+
+  setInterval(function() {
+    fetch("http://0.0.0.0/sus")
+      .then(response => response.json())
+      .then((responseJson) => {
+          if (responseJson['status'] == "Yes") {
+            navigation.navigate('Details')
+          }
+
+      })
+      .catch(error => console.log(error))
+  }, 10000);
+
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={styles.main}>
+      <Text>All good :)</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function DetailsScreen({ navigation }) {
+  return (
+    <View style={styles.danger}>
+      <Image
+        source={{ uri: "http://0.0.0.0/image" }}
+        style={{ width: 200, height: 200 }}
+      />
+
+      <Text style={styles.instructions} >
+        Hard Hat not detected
+      </Text>
+
+      <Button
+          title="Acknowledge"
+          onPress={
+            () => fetch("http://0.0.0.0/clear").then(response => response.json()).then((responseJson) => {
+                navigation.goBack()
+            }).catch(error => console.log(error))
+        }
+        />
+    </View>
+  );
+}
+
+const Stack = createStackNavigator();
+
+function App({ navigation }) {
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+  }
+
+export default App;
